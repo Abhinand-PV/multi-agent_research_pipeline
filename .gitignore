@@ -1,0 +1,174 @@
+﻿# ============================================================
+# .gitignore for Python Multi-Agent Pipeline
+# Project: multiagent-pipeline
+# ============================================================
+
+# -----------------------------------------
+# SECRETS & ENVIRONMENT VARIABLES
+# -----------------------------------------
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+*.env
+
+# -----------------------------------------
+# PYTHON BYTECODE & CACHE
+# -----------------------------------------
+__pycache__/
+*.py[cod]
+*.class
+*.pyo
+*.pyd
+.Python
+
+# -----------------------------------------
+# VIRTUAL ENVIRONMENTS
+# -----------------------------------------
+venv/
+venv-*/
+.venv/
+.venv-*/
+env/
+ENV/
+virtualenv/
+.virtualenvs/
+
+# -----------------------------------------
+# TESTING & COVERAGE
+# -----------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+nosetests.xml
+test-results/
+test-reports/
+junit.xml
+
+# -----------------------------------------
+# BUILD & DISTRIBUTION
+# -----------------------------------------
+dist/
+build/
+*.egg-info/
+*.egg
+*.whl
+MANIFEST
+.eggs/
+site/
+
+# -----------------------------------------
+# PACKAGE MANAGER FILES
+# -----------------------------------------
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile.lock
+poetry.lock
+pdm.lock
+
+# -----------------------------------------
+# TYPE CHECKING & LINTING
+# -----------------------------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# -----------------------------------------
+# JUPYTER NOTEBOOKS
+# -----------------------------------------
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# -----------------------------------------
+# IDE & EDITOR FILES
+# -----------------------------------------
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim/Neovim
+*.swp
+*.swo
+*~
+
+# Spyder
+.spyderproject.cfg
+.spyproject
+
+# -----------------------------------------
+# WINDOWS SYSTEM FILES
+# -----------------------------------------
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# -----------------------------------------
+# macOS SYSTEM FILES
+# -----------------------------------------
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+
+# -----------------------------------------
+# LOGS & RUNTIME DATA
+# -----------------------------------------
+*.log
+logs/
+*.pid
+
+# -----------------------------------------
+# AI / AGENT SPECIFIC
+# -----------------------------------------
+.agents/
+agents_trace/
+agent_logs/
+agent_output/
+traces/
+outputs/
+reports/
+generated/
+*.report.txt
+*.report.md
+
+# -----------------------------------------
+# API KEYS & CREDENTIALS (extra safety)
+# -----------------------------------------
+*.pem
+*.key
+*.cert
+*.crt
+credentials.json
+service_account.json
+secrets.json
+secrets.yaml
+secrets.yml
+
+# -----------------------------------------
+# MISCELLANEOUS
+# -----------------------------------------
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+.cache/
+.temp/
+tmp/
+temp/
