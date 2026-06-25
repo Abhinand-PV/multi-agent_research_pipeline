@@ -11,7 +11,7 @@
 .env.local
 .env.development
 .env.production
-*.env
+# *.env  <- removed, too broad
 
 # -----------------------------------------
 # PYTHON BYTECODE & CACHE
