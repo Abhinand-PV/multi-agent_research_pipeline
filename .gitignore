@@ -172,3 +172,6 @@ secrets.yml
 .temp/
 tmp/
 temp/
+
+# Allow the example env file
+!.env.example
