@@ -13,6 +13,6 @@ def get_groq_model():
         base_url="https://api.groq.com/openai/v1",
     )
     return OpenAIChatCompletionsModel(
-        model="llama-3.3-70b-versatile",
+        model="llama-3.1-8b-instant", 
         openai_client=groq_client,
     )
