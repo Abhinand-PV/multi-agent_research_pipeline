@@ -147,6 +147,9 @@ generated/
 *.report.txt
 *.report.md
 
+# Test output logs (screenshots are committed)
+docs/*.txt
+
 # -----------------------------------------
 # API KEYS & CREDENTIALS (extra safety)
 # -----------------------------------------
@@ -173,5 +176,9 @@ secrets.yml
 tmp/
 temp/
 
+# Streamlit local secrets (never commit real keys)
+.streamlit/secrets.toml
+
 # Allow the example env file
 !.env.example
+!.streamlit/secrets.toml.example
