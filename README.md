@@ -5,25 +5,25 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
-# 🔬 Multi-Agent Research Pipeline
+# Multi-Agent Research Pipeline
 
 > An AI-powered research pipeline that orchestrates four specialized agents to automatically generate high-quality, peer-reviewed research reports on any topic — built with the **OpenAI Agents SDK** and **Groq**.
 
-**🌐 Live Demo:** [multi-agentresearch-byabhinandpv.streamlit.app](https://multi-agentresearch-byabhinandpv.streamlit.app/)
+**Live Demo:** [multi-agentresearch-byabhinandpv.streamlit.app](https://multi-agentresearch-byabhinandpv.streamlit.app/)
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **🤖 Four Specialized Agents** — Each agent has a distinct role: research, analysis, writing, and quality review
-- **🔄 Automated Quality Loop** — A Judge agent scores reports and triggers revisions until a quality threshold is met
-- **⚡ Retry & Error Handling** — Built-in retry logic with exponential backoff for API rate limits and transient failures
-- **🛡️ Output Validation** — Every stage validates its output for API errors, stack traces, and hallucinated content
-- **🆓 Free to Run** — Powered by Groq's free-tier LLaMA 3.1-8B inference API
+- **Four Specialized Agents** — Each agent has a distinct role: research, analysis, writing, and quality review.
+- **Automated Quality Loop** — A Judge agent scores reports and triggers revisions until a quality threshold is met.
+- **Retry & Error Handling** — Built-in retry logic with exponential backoff for API rate limits and transient failures.
+- **Output Validation** — Every stage validates its output for API errors, stack traces, and hallucinated content.
+- **Inference Efficiency** — Powered by Groq's low-latency LLaMA 3.1-8B inference API.
 
 ---
 
-## 📸 Screenshots & Demo
+## Screenshots & Demo
 
 Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/](https://multi-agentresearch-byabhinandpv.streamlit.app/)**
 
@@ -51,15 +51,15 @@ Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/
 
 | Feature | Status | Notes |
 |---|---|---|
-| Groq API connectivity | ✅ Passed | `test_setup.py` confirms agent responds |
-| Multi-agent pipeline (CLI) | ✅ Passed | Research → Analysis → Writing → Judge in ~4s |
-| Streamlit web UI | ✅ Passed | Topic input, report generation, markdown download |
-| Judge quality loop | ✅ Passed | Report scored and approved by Judge agent |
-| Live deployment | ✅ Live | Hosted on Streamlit Community Cloud |
+| Groq API connectivity | Passed | `test_setup.py` confirms agent responds |
+| Multi-agent pipeline (CLI) | Passed | Research → Analysis → Writing → Judge in ~4s |
+| Streamlit web UI | Passed | Topic input, report generation, markdown download |
+| Judge quality loop | Passed | Report scored and approved by Judge agent |
+| Live deployment | Active | Hosted on Streamlit Community Cloud |
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
                         ┌──────────────┐
@@ -96,14 +96,14 @@ Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/
 
 ---
 
-## 🤖 Agent Details
+## Agent Details
 
 | Agent | Role | Responsibilities |
 |---|---|---|
-| **🔍 Researcher** | Information Gathering | Uses `search_web` tool to collect data, organizes findings, preserves facts and statistics |
-| **📊 Analyst** | Insight Extraction | Identifies key findings, trends, opportunities, risks, and relationships between ideas |
-| **✍️ Writer** | Report Composition | Converts research and analysis into a structured, professional Markdown report |
-| **⚖️ Judge** | Quality Assurance | Scores the report on 6 criteria (1–5 scale), triggers revisions if average < 4.0 |
+| **Researcher** | Information Gathering | Uses `search_web` tool to collect data, organizes findings, preserves facts and statistics |
+| **Analyst** | Insight Extraction | Identifies key findings, trends, opportunities, risks, and relationships between ideas |
+| **Writer** | Report Composition | Converts research and analysis into a structured, professional Markdown report |
+| **Judge** | Quality Assurance | Scores the report on 6 criteria (1–5 scale), triggers revisions if average < 4.0 |
 
 ### Judge Evaluation Criteria
 
@@ -122,7 +122,7 @@ Reports scoring **≥ 4.0 average** are approved. Otherwise, the Writer receives
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 multi-agent_research_pipeline/
@@ -153,12 +153,19 @@ multi-agent_research_pipeline/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### Prerequisites
+### Prerequisites & Required Tools
 
-- **Python 3.10** or higher
-- A free **Groq API key** — get one at [console.groq.com](https://console.groq.com)
+To run or recreate this project, you will need the following tools, libraries, and accounts:
+
+1. **Git**: Required for version control and cloning the repository.
+2. **Python 3.10+**: The core programming language runtime environment.
+3. **pip**: Python package installer (typically bundled with Python installations) to install the project packages.
+4. **venv** (Python virtual environment): Recommended to isolate project dependencies.
+5. **Groq API Account & Key**: Needed to access the LLaMA 3.1-8B inference API. Get a free key at [console.groq.com](https://console.groq.com).
+6. **OpenAI Agents SDK (v0.17.7)**: The agent-orchestration library used to define, coordinate, and execute the multi-agent system.
+7. **Streamlit (v1.32.0+)**: The frontend framework used to build and serve the interactive web interface.
 
 ### Installation
 
@@ -169,12 +176,7 @@ cd multi-agent_research_pipeline
 
 # 2. Create and activate a virtual environment
 python -m venv venv
-
-# On Windows
-venv\Scripts\activate
-
-# On macOS / Linux
-source venv/bin/activate
+source venv/bin/activate  # Or venv\Scripts\activate on Windows
 
 # 3. Install dependencies
 pip install -r requirements.txt
@@ -186,19 +188,16 @@ cp .env.example .env
 
 ### Configuration
 
-Create a `.env` file in the project root (or copy from `.env.example`):
+Create a `.env` file in the project root:
 
 ```env
-# Groq API Key — required
 GROQ_API_KEY=your_groq_api_key_here
-
-# Disable OpenAI Agents SDK tracing (recommended for privacy)
 OPENAI_AGENTS_DISABLE_TRACING=1
 ```
 
 ---
 
-## 💡 Usage
+## Usage
 
 ### Web UI (Streamlit)
 
@@ -208,21 +207,10 @@ Run the interactive web app locally:
 streamlit run app.py
 ```
 
-The app opens in your browser at `http://localhost:8501`. Enter a research topic and click **Generate Report**.
-
-**Deployed version:** [multi-agentresearch-byabhinandpv.streamlit.app](https://multi-agentresearch-byabhinandpv.streamlit.app/)
-
-### Run with a topic argument
+### Command Line Interface
 
 ```bash
 python main.py "artificial intelligence in healthcare"
-```
-
-### Run interactively
-
-```bash
-python main.py
-# You'll be prompted: "Enter a research topic: "
 ```
 
 ### Verify setup
@@ -231,54 +219,15 @@ python main.py
 python test_setup.py
 ```
 
-### Example Output
-
-```
-Starting research pipeline for: 'artificial intelligence in healthcare'
-==================================================
-Orchestrating agents: Researcher -> Analyst -> Writer
-==================================================
-
-========== PIPELINE STARTED ==========
-
-[Research Stage] Running...
-[Research Stage] Complete
-
-[Analysis Stage] Running...
-[Analysis Stage] Complete
-
-[Writer Stage] Running...
-[Writer Stage] Complete
-
-[Judge] Review 1
-[Judge] Score = 4.5/5
-[Judge] Approved
-
-==================================================
-RESEARCH REPORT
-==================================================
-
-# Artificial Intelligence in Healthcare
-## Executive Summary
-...
-
-========== PIPELINE FINISHED ==========
-Pipeline completed in 12.3 seconds
-```
-
 ---
 
-## 🌐 Deploy with Streamlit Cloud
+## Streamlit Cloud Deployment
 
 This project is ready to deploy on [Streamlit Community Cloud](https://share.streamlit.io).
 
 ### 1. Push to GitHub
 
-Ensure your repository is on GitHub and includes:
-
-- `app.py` — main Streamlit entry point
-- `requirements.txt` — Python dependencies
-- `.streamlit/config.toml` — app theme and server settings
+Ensure your repository is on GitHub and includes `app.py`, `requirements.txt`, and necessary config files.
 
 ### 2. Create the app on Streamlit Cloud
 
@@ -290,26 +239,20 @@ Ensure your repository is on GitHub and includes:
 
 ### 3. Add secrets
 
-In your app's **Settings → Secrets**, paste:
+In your app's **Settings → Secrets**, add:
 
 ```toml
 GROQ_API_KEY = "your_groq_api_key_here"
 OPENAI_AGENTS_DISABLE_TRACING = "1"
 ```
 
-Replace the placeholder with your real Groq API key from [console.groq.com](https://console.groq.com).
-
-For local development, you can copy [`.streamlit/secrets.toml.example`](.streamlit/secrets.toml.example) to `.streamlit/secrets.toml` instead of using a `.env` file.
-
 ### 4. Redeploy
 
-After changing secrets or code, redeploy from the Streamlit Cloud dashboard (or push a new commit if auto-deploy is enabled).
-
-**Live app:** [https://multi-agentresearch-byabhinandpv.streamlit.app/](https://multi-agentresearch-byabhinandpv.streamlit.app/)
+After changing secrets or code, redeploy from the Streamlit Cloud dashboard.
 
 ---
 
-## ⚙️ Configuration Options
+## Configuration Options
 
 The pipeline behavior can be tuned via constants in [`orchestrator.py`](custom_agents/orchestrator.py):
 
@@ -321,7 +264,7 @@ The pipeline behavior can be tuned via constants in [`orchestrator.py`](custom_a
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -333,7 +276,7 @@ The pipeline behavior can be tuned via constants in [`orchestrator.py`](custom_a
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Integrate a real search provider (Tavily, SerpAPI, Brave Search)
 - [ ] Add support for multiple LLM providers (OpenAI, Anthropic, Gemini)
@@ -344,7 +287,7 @@ The pipeline behavior can be tuned via constants in [`orchestrator.py`](custom_a
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -356,12 +299,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  Built with ❤️ using OpenAI Agents SDK and Groq
+  Built using the OpenAI Agents SDK and Groq
 </p>
