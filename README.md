@@ -8,69 +8,29 @@
 
 # Multi-Agent Research Pipeline
 
-> An AI-powered research pipeline that orchestrates four specialized agents to automatically generate high-quality, peer-reviewed research reports on any topic — backed by **real web search** and built with the **OpenAI Agents SDK** and **Groq**.
+> An autonomous, AI-powered research pipeline orchestrating specialized autonomous agents to generate high-quality, peer-reviewed research reports. Built with the **OpenAI Agents SDK** and **Groq** for high-throughput, low-latency LLM inference.
 
-**Live Demo:** [multi-agentresearch-byabhinandpv.streamlit.app](https://multi-agentresearch-byabhinandpv.streamlit.app/)
-
----
-
-## What's New
-
-| Change | Details |
-|---|---|
-| 🔍 **Real web search** | Replaced mock stub with **DuckDuckGo Search** — no API key required |
-| 📊 **Live progress** | Streamlit UI now shows per-stage progress in real time |
-| 🧠 **Configurable model** | Switch Groq models via `GROQ_MODEL` env var without touching code |
-| 🌡️ **Temperature control** | Each agent uses a tuned temperature for its role (0.1–0.5) |
-| 📚 **Session history** | Previously generated reports are preserved in the sidebar |
-| 🛡️ **Reliability fixes** | Judge score fallback, narrower false-positive detection, graceful revision cap |
-| 📝 **Logging** | Replaced `print()` statements with structured Python `logging` |
-| 🏷️ **Type hints** | Full type annotations on all public functions |
+**Live Deployment:** [multi-agentresearch-byabhinandpv.streamlit.app](https://multi-agentresearch-byabhinandpv.streamlit.app/)
 
 ---
 
-## Key Features
+## Technical Overview
 
-- **Four Specialized Agents** — Each agent has a distinct role: research, analysis, writing, and quality review.
-- **Real Web Search** — The Researcher agent performs multi-query DuckDuckGo searches, deduplicates results, and extracts up to 12 real sources per report.
-- **Automated Quality Loop** — A Judge agent scores reports on 6 criteria and triggers targeted revisions until the quality threshold is met.
-- **Live Pipeline Progress** — The Streamlit UI updates in real time as each stage completes.
-- **Session Report History** — Past reports are stored in the session and accessible from the sidebar without re-running.
-- **Configurable Model** — Switch between Groq's fast and high-quality models via an environment variable.
-- **Retry & Error Handling** — Built-in exponential-backoff retry logic for API rate limits and transient failures.
-- **Output Validation** — Every stage validates its output for API errors and pipeline failures using precise keyword matching.
+This project implements a multi-agent system designed to handle complex research tasks through distributed responsibilities. By isolating concerns across four specialized agents—Research, Analysis, Writing, and Quality Assurance—the system minimizes hallucination and maximizes output quality. The architecture features an automated quality-control loop, deterministic output validation, and exponential backoff for fault tolerance.
 
----
+### Core Architecture
 
-## Screenshots & Demo
-
-Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/](https://multi-agentresearch-byabhinandpv.streamlit.app/)**
-
-### Streamlit Web UI
-
-| Home | Topic entered |
-|:---:|:---:|
-| ![Streamlit home page](docs/screenshots/streamlit-home.png) | ![Streamlit form filled](docs/screenshots/streamlit-form-filled.png) |
-
-| Pipeline running | Generated report |
-|:---:|:---:|
-| ![Streamlit generating report](docs/screenshots/streamlit-generating.png) | ![Streamlit report result](docs/screenshots/streamlit-report-result.png) |
-
-### Command Line Interface
-
-**Setup verification** (`python test_setup.py`):
-
-![CLI test setup output](docs/screenshots/cli-test-setup.png)
-
-**Full pipeline** (`python main.py "renewable energy"`):
-
-![CLI pipeline output](docs/screenshots/cli-pipeline.png)
+- **Separation of Concerns**: Four distinct AI agents operate in a sequential pipeline, each optimized with specific system instructions and tuned LLM sampling parameters (temperature) appropriate for their function.
+- **Automated Feedback Loop**: A programmatic Judge agent evaluates the final output against structured criteria, capable of triggering multiple revision cycles back to the Writer agent if the quality threshold is not met.
+- **Fault Tolerance**: Robust retry mechanisms with exponential backoff handle transient API rate limits and network interruptions.
+- **Strict Output Validation**: Deterministic validation layers prevent the propagation of LLM artifacts (e.g., stack traces, hallucinated tool calls) down the pipeline.
+- **Real-Time Data Integration**: Integrates directly with DuckDuckGo for live web data, bypassing the need for static or pre-trained knowledge retrieval.
 
 ---
 
-## Architecture
+## System Architecture
 
-```
+```text
                         ┌──────────────┐
                         │  User Input  │
                         │   (Topic)    │
@@ -84,7 +44,7 @@ Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/
               │                │                │
        ┌──────▼──────┐ ┌──────▼──────┐ ┌───────▼──────┐
        │  Researcher  │ │   Analyst   │ │    Writer    │
-       │  DuckDuckGo  │─▶  Insights  │─▶   Report    │
+       │  (Web API)   │─▶  Insights  │─▶   Report    │
        │  (Stage 1)   │ │  (Stage 2)  │ │  (Stage 3)   │
        └──────────────┘ └─────────────┘ └───────┬──────┘
                                                 │
@@ -101,270 +61,135 @@ Try the deployed app: **[https://multi-agentresearch-byabhinandpv.streamlit.app/
                              │   Approved  │    │  Revision Required   │
                              │   Report    │    │  (Back to Writer)    │
                              └─────────────┘    └──────────────────────┘
-                                                (up to 2 revision cycles)
+                                                (up to N revision cycles)
 ```
 
 ---
 
-## Agent Details
+## Agent Specifications
 
-| Agent | Role | Responsibilities |
-|---|---|---|
-| **Researcher** | Information Gathering | Runs 3 targeted DuckDuckGo queries, deduplicates by URL, returns up to 12 real sources |
-| **Analyst** | Insight Extraction | Identifies key findings, trends, opportunities, risks, and gaps from the research |
-| **Writer** | Report Composition | Converts research and analysis into a structured, professional Markdown report |
-| **Judge** | Quality Assurance | Scores the report on 6 criteria (1–5 scale), triggers revisions if average < 4.0 |
+Each agent in the system is configured with a specific role, instruction set, and sampling temperature to optimize for either determinism or creativity.
 
-### Agent Temperature Settings
+| Agent | Role | Sub-system Responsibilities | LLM Temp |
+|---|---|---|---|
+| **Researcher** | Information Retrieval | Executes targeted queries via DuckDuckGo API, deduplicates sources, and structures raw findings. | `0.2` |
+| **Analyst** | Insight Extraction | Synthesizes raw data, identifying macro trends, correlative insights, and potential data gaps. | `0.2` |
+| **Writer** | Report Composition | Transforms analytical insights into a structured, professional Markdown document. | `0.5` |
+| **Judge** | Quality Assurance | Scores the output on 6 predefined dimensions (1-5 scale) and provides programmatic feedback. | `0.1` |
 
-Each agent uses a temperature tuned for its role:
+### Automated Quality Assurance (Judge Agent)
 
-| Agent | Temperature | Rationale |
-|---|---|---|
-| Researcher | `0.2` | Low — factual extraction, must be precise |
-| Analyst | `0.2` | Low — analytical consistency, avoid invention |
-| Writer | `0.5` | Medium — quality prose while staying grounded |
-| Judge | `0.1` | Very low — reproducible, consistent scoring |
+The Judge agent enforces a strict evaluation matrix before output delivery:
+1. **Relevance**: Alignment with the initial user prompt.
+2. **Completeness**: Coverage of required analytical dimensions.
+3. **Accuracy**: Consistency with the retrieved ground-truth data.
+4. **Clarity**: Lexical precision and readability.
+5. **Organization**: Structural integrity of the Markdown document.
+6. **Professionalism**: Suitability for enterprise or academic consumption.
 
-### Judge Evaluation Criteria
-
-The Judge agent scores each report on the following dimensions:
-
-| Criterion | What It Measures |
-|---|---|
-| **Relevance** | Does the report directly answer the requested topic? |
-| **Completeness** | Are all important aspects covered without obvious gaps? |
-| **Accuracy** | Is the content consistent with the provided research? |
-| **Clarity** | Is the report easy to understand with precise language? |
-| **Organization** | Is the structure logical and headings used effectively? |
-| **Professionalism** | Would this be acceptable in a professional/academic setting? |
-
-Reports scoring **≥ 4.0 average** are approved. Otherwise, the Writer receives targeted feedback and revises (up to **2 revision cycles**). After exhausting revisions, the best available report is returned.
+Reports must achieve a minimum composite score of **4.0/5.0**. Sub-standard reports trigger a feedback loop, routing the Judge's specific critiques back to the Writer for iterative refinement.
 
 ---
 
-## Project Structure
+## Technology Stack
 
-```
-multi-agent_research_pipeline/
-├── app.py                           # Streamlit web UI (deploy entry point)
-├── main.py                          # CLI entry point — accepts topic & runs pipeline
-├── requirements.txt                 # Python dependencies
-├── .env.example                     # Environment variable template
-├── .streamlit/
-│   ├── config.toml                  # Streamlit theme and server settings
-│   └── secrets.toml.example         # Secrets template for Streamlit Cloud
-├── .gitignore                       # Git ignore rules
-├── test_setup.py                    # Quick test to verify Groq connectivity
-├── docs/
-│   └── screenshots/                 # README screenshots (Streamlit + CLI)
-├── scripts/
-│   ├── capture_screenshots.py       # Capture live app screenshots
-│   └── render_cli_screenshots.py    # Render CLI output for README
-│
-└── custom_agents/                   # Agent definitions
-    ├── __init__.py
-    ├── config.py                    # Groq model configuration (supports GROQ_MODEL env var)
-    ├── orchestrator.py              # Pipeline orchestration, retry logic, progress callbacks
-    ├── researcher.py                # Researcher agent + DuckDuckGo search tool
-    ├── analyst.py                   # Analyst agent
-    ├── writer.py                    # Writer agent
-    └── judge.py                     # Judge agent (quality reviewer)
-```
+- **OpenAI Agents SDK (`v0.17.7`)**: Core orchestration framework for agent lifecycle management.
+- **Groq API**: High-speed LLaMA inference engine powering the LLM backend.
+- **DuckDuckGo Search (`≥6.2.0`)**: Real-time web data retrieval.
+- **Streamlit (`≥1.32.0`)**: Interactive web interface with session state management.
+- **Python (`3.10+`)**: Primary runtime environment.
 
 ---
 
-## Getting Started
+## Interface Options
 
-### Prerequisites & Required Tools
+### Streamlit Web Interface
 
-1. **Git** — version control and cloning.
-2. **Python 3.10+** — runtime environment.
-3. **pip** — package installer.
-4. **venv** — recommended to isolate project dependencies.
-5. **Groq API Account & Key** — free at [console.groq.com](https://console.groq.com).
-6. **DuckDuckGo Search** — no API key needed; installed as a Python package.
-
-### Installation
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/Abhinand-PV/multi-agent_research_pipeline.git
-cd multi-agent_research_pipeline
-
-# 2. Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate        # Linux / macOS
-# OR
-venv\Scripts\activate           # Windows
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Configure environment variables
-cp .env.example .env
-# Open .env and add your GROQ_API_KEY
-```
-
-### Configuration
-
-Create a `.env` file in the project root:
-
-```env
-# Required
-GROQ_API_KEY=your_groq_api_key_here
-
-# Optional — switch model without changing code
-# llama-3.1-8b-instant     (default — fast)
-# llama-3.3-70b-versatile  (best quality)
-GROQ_MODEL=llama-3.1-8b-instant
-
-# Recommended — disable SDK tracing
-OPENAI_AGENTS_DISABLE_TRACING=1
-```
-
----
-
-## Usage
-
-### Web UI (Streamlit)
+Provides a full GUI with real-time pipeline telemetry, session state persistence for historical reports, and integrated document download capabilities.
 
 ```bash
 streamlit run app.py
 ```
 
-The UI will show:
-- Live per-stage progress updates as the pipeline runs
-- The full report rendered as Markdown
-- A download button for the `.md` file
-- Past reports in the sidebar (persisted for the session)
+### Command Line Interface (CLI)
 
-### Command Line Interface
+Designed for headless execution or integration into broader automation scripts. Features live standard output logging and stage progression tracking.
 
 ```bash
-python main.py "artificial intelligence in healthcare"
+python main.py "Advances in Quantum Error Correction"
 ```
 
-The CLI prints percentage-based progress as each stage completes:
+---
 
-```
-[ 10%] 🔎 Stage 1/4 — Researching topic...
-[ 20%] ⚙️  [Research Stage] Running (attempt 1)...
-[ 35%] 📊 Stage 2/4 — Analysing findings...
-[ 60%] ✍️  Stage 3/4 — Writing report...
-[ 80%] ✅ Stage 4/4 — Judge reviewing report...
-[ 95%] ✅ Report approved by Judge (score: 4.33/5.0)
-```
+## Setup and Installation
 
-### Verify setup
+### Prerequisites
+- Python 3.10 or higher
+- Git
+- Groq API Key (Available at [console.groq.com](https://console.groq.com))
+
+### Local Environment Initialization
 
 ```bash
-python test_setup.py
+# Clone the repository
+git clone https://github.com/Abhinand-PV/multi-agent_research_pipeline.git
+cd multi-agent_research_pipeline
+
+# Initialize virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+```
+
+### Configuration (`.env`)
+
+```env
+# Required Authorization
+GROQ_API_KEY=your_groq_api_key_here
+
+# Model Selection
+# Options: llama-3.1-8b-instant (default), llama-3.3-70b-versatile
+GROQ_MODEL=llama-3.1-8b-instant
+
+# Telemetry Configuration
+OPENAI_AGENTS_DISABLE_TRACING=1
 ```
 
 ---
 
-## Streamlit Cloud Deployment
+## Project Structure
 
-This project is ready to deploy on [Streamlit Community Cloud](https://share.streamlit.io).
-
-### 1. Push to GitHub
-
-Ensure your repository includes `app.py`, `requirements.txt`, and config files.
-
-### 2. Create the app on Streamlit Cloud
-
-1. Sign in at [share.streamlit.io](https://share.streamlit.io)
-2. Click **Create app**
-3. Select your GitHub repository and branch
-4. Set **Main file path** to `app.py`
-5. Click **Deploy**
-
-### 3. Add secrets
-
-In your app's **Settings → Secrets**, add:
-
-```toml
-GROQ_API_KEY = "your_groq_api_key_here"
-GROQ_MODEL = "llama-3.1-8b-instant"
-OPENAI_AGENTS_DISABLE_TRACING = "1"
+```text
+multi-agent_research_pipeline/
+├── app.py                           # Streamlit web application entry point
+├── main.py                          # CLI execution entry point
+├── requirements.txt                 # Project dependency specifications
+├── .env.example                     # Environment variable template
+├── custom_agents/                   # Agent and Orchestration Logic
+│   ├── orchestrator.py              # Pipeline execution, retry logic, and event routing
+│   ├── config.py                    # Global model and SDK configuration
+│   ├── researcher.py                # Retrieval agent and search tool integration
+│   ├── analyst.py                   # Synthesis agent definition
+│   ├── writer.py                    # Composition agent definition
+│   └── judge.py                     # Evaluation agent and quality criteria
 ```
 
-### 4. Redeploy
-
-After changing secrets or code, redeploy from the Streamlit Cloud dashboard.
-
 ---
 
-## Configuration Options
+## Roadmap and Future Enhancements
 
-The pipeline behaviour can be tuned via constants in [`orchestrator.py`](custom_agents/orchestrator.py) and environment variables:
-
-### Code Constants
-
-| Parameter | Default | Description |
-|---|---|---|
-| `MAX_RETRIES` | `3` | Maximum retry attempts per agent on transient errors |
-| `MAX_REVISIONS` | `2` | Maximum revision cycles for the Writer based on Judge feedback |
-| `QUALITY_THRESHOLD` | `4.0` | Minimum average score (out of 5) required for the Judge to approve |
-
-### Environment Variables
-
-| Variable | Default | Description |
-|---|---|---|
-| `GROQ_API_KEY` | *(required)* | Your Groq API key |
-| `GROQ_MODEL` | `llama-3.1-8b-instant` | Groq model to use for all agents |
-| `OPENAI_AGENTS_DISABLE_TRACING` | `1` | Disable OpenAI Agents SDK telemetry |
-
----
-
-## Tech Stack
-
-| Technology | Version | Purpose |
-|---|---|---|
-| [OpenAI Agents SDK](https://github.com/openai/openai-agents-python) | `0.17.7` | Agent orchestration framework |
-| [Groq API](https://groq.com) | — | Ultra-fast LLaMA inference |
-| [DuckDuckGo Search](https://pypi.org/project/duckduckgo-search/) | `≥6.2.0` | Real web search (no API key required) |
-| [python-dotenv](https://pypi.org/project/python-dotenv/) | `1.1.0` | Environment variable management |
-| [Streamlit](https://streamlit.io) | `≥1.32.0` | Web UI and cloud deployment |
-| Python | `3.10+` | Runtime |
-
----
-
-## Roadmap
-
-- [x] Add a web-based UI for interactive use
-- [x] Real web search (DuckDuckGo — no API key required)
-- [x] Live pipeline progress in the Streamlit UI
-- [x] Configurable model via environment variable
-- [x] Session report history
-- [x] Per-agent temperature tuning
-- [ ] Integrate a premium search provider (Tavily, SerpAPI, Brave Search)
-- [ ] Add support for multiple LLM providers (OpenAI, Anthropic, Gemini)
-- [ ] Export reports to PDF / HTML
-- [ ] Implement persistent report storage (database)
-- [ ] Add citation verification and fact-checking
-
----
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- **Pluggable Search Interfaces**: Abstract the search layer to support Tavily, SerpAPI, and internal vector databases.
+- **Multi-Provider LLM Support**: Expand compatibility beyond Groq to support OpenAI, Anthropic, and localized models.
+- **Advanced State Management**: Implement persistent storage layers (e.g., PostgreSQL, Redis) for cross-session report archiving.
+- **Citation Verification**: Introduce a dedicated fact-checking agent to rigorously map claims to specific source URLs.
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-<p align="center">
-  Built using the OpenAI Agents SDK · Groq · DuckDuckGo Search · Streamlit
-</p>
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
