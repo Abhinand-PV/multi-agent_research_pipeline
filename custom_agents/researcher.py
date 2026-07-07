@@ -1,111 +1,128 @@
+"""
+Researcher agent — Stage 1 of the multi-agent research pipeline.
+
+Uses DuckDuckGo to perform real web searches and organises findings
+into a structured Research Summary for the Analyst to process.
+"""
+
+import logging
+from duckduckgo_search import DDGS
 from agents import Agent, function_tool
 from custom_agents.config import get_groq_model
 
+logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Search tool
+# ---------------------------------------------------------------------------
 
 @function_tool
 def search_web(query: str) -> str:
     """
-    Mock web search tool.
+    Search the web using DuckDuckGo and return structured results.
 
-    Replace this with Tavily, SerpAPI, Exa, Brave Search,
-    or another real search provider in the future.
+    Performs up to three targeted queries to gather broad coverage
+    of the topic, then formats results for the Researcher agent.
+
+    Args:
+        query: The search query string.
+
+    Returns:
+        Formatted string of search results with titles, URLs, and snippets.
     """
-
-    results = [
-        {
-            "title": f"Overview of {query}",
-            "source": "Academic Database",
-            "snippet": (
-                f"{query} is an actively evolving field with applications "
-                "across multiple industries."
-            ),
-        },
-        {
-            "title": f"Industry Trends in {query}",
-            "source": "Industry Report",
-            "snippet": (
-                f"Organizations continue adopting {query} to improve "
-                "efficiency, scalability, and automation."
-            ),
-        },
-        {
-            "title": f"Future of {query}",
-            "source": "Technology Review",
-            "snippet": (
-                f"Experts predict continued innovation, increased adoption, "
-                "and new research opportunities."
-            ),
-        },
+    queries = [
+        query,
+        f"{query} overview applications",
+        f"{query} challenges future trends",
     ]
 
-    output = []
+    all_results: list[dict] = []
+    seen_urls: set[str] = set()
 
-    for i, result in enumerate(results, start=1):
-        output.append(
-            f"""
-[{i}] {result['title']}
-Source: {result['source']}
+    with DDGS() as ddgs:
+        for q in queries:
+            try:
+                hits = ddgs.text(q, max_results=4)
+                for hit in hits:
+                    url = hit.get("href", "")
+                    if url and url not in seen_urls:
+                        seen_urls.add(url)
+                        all_results.append(hit)
+            except Exception as exc:
+                logger.warning("DuckDuckGo query failed for '%s': %s", q, exc)
 
-{result['snippet']}
-"""
+    if not all_results:
+        return (
+            "No search results found. "
+            "The topic may be too narrow or the search service is temporarily unavailable."
         )
 
-    return "\n".join(output)
+    lines: list[str] = []
+    for i, result in enumerate(all_results[:12], start=1):
+        title = result.get("title", "Untitled")
+        url = result.get("href", "N/A")
+        snippet = result.get("body", "No description available.")
+        lines.append(
+            f"[{i}] {title}\n"
+            f"Source: {url}\n"
+            f"{snippet}\n"
+        )
+
+    return "\n".join(lines)
 
 
-def create_researcher():
+# ---------------------------------------------------------------------------
+# Agent factory
+# ---------------------------------------------------------------------------
+
+def create_researcher() -> Agent:
+    """Create and return the Researcher specialist agent."""
 
     return Agent(
-
         name="Researcher",
-
         instructions="""
 You are a Senior Research Specialist.
 
-Your ONLY responsibility is collecting information.
+Your ONLY responsibility is collecting information from the provided search results.
 
 Workflow:
 
-1. Use the search_web tool.
-2. Gather all available information.
+1. Use the search_web tool with the given topic.
+2. Read every result carefully.
 3. Remove duplicate information.
-4. Organize findings clearly.
-5. Preserve important facts.
-6. Preserve statistics.
-7. Preserve dates.
-8. Preserve technical terminology.
-9. Never invent facts.
-10. Never analyze the information.
-11. Never summarize beyond what was found.
-12. Never write the final report.
-13. If search results contain an API error,
-    rate limit,
-    stack trace,
-    tool failure,
-    or unrelated content,
+4. Organise findings clearly under the sections below.
+5. Preserve all important facts, statistics, dates, and technical terms exactly as found.
+6. Never invent facts or statistics.
+7. Never perform analysis — that belongs to the Analyst.
+8. Never write the final report — that belongs to the Writer.
+9. If search results contain an API error, rate limit, stack trace, tool failure,
+   or completely unrelated content, STOP and report the issue clearly.
 
-    STOP.
-
-Return:
+Return EXACTLY this Markdown structure:
 
 # Research Summary
 
 ## Overview
+(What is this topic? Define it concisely.)
 
 ## Important Findings
+(Key facts and discoveries from the search results.)
 
-## Statistics
+## Statistics & Data
+(Any numbers, percentages, dates, or measurable data found.)
 
-## Technologies
+## Technologies & Methods
+(Specific tools, platforms, techniques, or methodologies mentioned.)
 
 ## Challenges
+(Problems, limitations, or barriers identified in the sources.)
 
 ## Sources
+(List each source as: [n] Title — URL)
 
-The next agent will perform analysis.
+The next agent will perform analysis on this output.
 """,
-
         tools=[search_web],
-
-        model=get_groq_model(),
+        model=get_groq_model(temperature=0.2),
     )
