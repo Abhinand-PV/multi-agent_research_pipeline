@@ -14,6 +14,16 @@
 
 ---
 
+## Key Features
+
+- 🧠 **Multi-Agent Orchestration**: Specialized agents for Research, Analysis, Writing, and QA.
+- ⚡ **High-Performance Inference**: Powered by Groq and LLaMA for near-instant text generation.
+- 🔄 **Self-Correcting Pipeline**: Automated quality evaluation and revision loops.
+- 🌐 **Real-Time Web Data**: Integrates directly with DuckDuckGo for up-to-date information.
+- 📊 **Interactive GUI**: User-friendly Streamlit interface for effortless interaction.
+
+---
+
 ## Technical Overview
 
 This project implements a multi-agent system designed to handle complex research tasks through distributed responsibilities. By isolating concerns across four specialized agents—Research, Analysis, Writing, and Quality Assurance—the system minimizes hallucination and maximizes output quality. The architecture features an automated quality-control loop, deterministic output validation, and exponential backoff for fault tolerance.
@@ -187,6 +197,20 @@ multi-agent_research_pipeline/
 - **Multi-Provider LLM Support**: Expand compatibility beyond Groq to support OpenAI, Anthropic, and localized models.
 - **Advanced State Management**: Implement persistent storage layers (e.g., PostgreSQL, Redis) for cross-session report archiving.
 - **Citation Verification**: Introduce a dedicated fact-checking agent to rigorously map claims to specific source URLs.
+
+---
+
+## Contributing
+
+Contributions are always welcome! If you'd like to improve this project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+Please ensure your code adheres to the existing style and includes appropriate documentation.
 
 ---
 
