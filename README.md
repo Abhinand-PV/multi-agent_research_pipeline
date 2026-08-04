@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
-<h1 align="center">🤖 Multi-Agent Research Pipeline</h1>
+<h1 align="center">Multi-Agent Research Pipeline</h1>
 
 <div align="center">
   <p><em>An autonomous, AI-powered research pipeline orchestrating specialized autonomous agents to generate high-quality, peer-reviewed research reports.</em></p>
@@ -19,33 +19,33 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [✨ Key Features](#-key-features)
-- [🏗️ Technical Overview](#️-technical-overview)
-- [🧩 System Architecture](#-system-architecture)
-- [👨‍💻 Agent Specifications](#-agent-specifications)
-- [🛠️ Technology Stack](#️-technology-stack)
-- [💻 Interface Options](#-interface-options)
-- [🚀 Setup and Installation](#-setup-and-installation)
-- [📁 Project Structure](#-project-structure)
-- [🗺️ Roadmap](#️-roadmap)
-- [🤝 Contributing](#-contributing)
-- [📜 License](#-license)
-
----
-
-## ✨ Key Features
-
-- 🧠 **Multi-Agent Orchestration**: Specialized autonomous agents for Research, Analysis, Writing, and QA.
-- ⚡ **High-Performance Inference**: Powered by **Groq** and **LLaMA** for near-instantaneous text generation.
-- 🔄 **Self-Correcting Pipeline**: Built-in automated quality evaluation and dynamic revision loops.
-- 🌐 **Real-Time Web Data**: Integrates seamlessly with DuckDuckGo for live, up-to-date information gathering.
-- 📊 **Interactive GUI**: A sleek, user-friendly Streamlit interface for effortless interaction.
+- [Key Features](#key-features)
+- [Technical Overview](#technical-overview)
+- [System Architecture](#system-architecture)
+- [Agent Specifications](#agent-specifications)
+- [Technology Stack](#technology-stack)
+- [Interface Options](#interface-options)
+- [Setup and Installation](#setup-and-installation)
+- [Project Structure](#project-structure)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 🏗️ Technical Overview
+## Key Features
+
+- **Multi-Agent Orchestration**: Specialized autonomous agents for Research, Analysis, Writing, and QA.
+- **High-Performance Inference**: Powered by **Groq** and **LLaMA** for near-instantaneous text generation.
+- **Self-Correcting Pipeline**: Built-in automated quality evaluation and dynamic revision loops.
+- **Real-Time Web Data**: Integrates seamlessly with DuckDuckGo for live, up-to-date information gathering.
+- **Interactive GUI**: A sleek, user-friendly Streamlit interface for effortless interaction.
+
+---
+
+## Technical Overview
 
 This project implements a sophisticated multi-agent system designed to handle complex research tasks through distributed responsibilities. By isolating concerns across four specialized AI agents—**Research, Analysis, Writing, and Quality Assurance**—the system minimizes hallucination and maximizes output quality. 
 
@@ -61,7 +61,7 @@ The architecture features an automated quality-control loop, deterministic outpu
 
 ---
 
-## 🧩 System Architecture
+## System Architecture
 
 ```text
                         ┌──────────────┐
@@ -88,7 +88,7 @@ The architecture features an automated quality-control loop, deterministic outpu
                                                 │
                                     ┌───────────┴───────────┐
                                     │                       │
-                              Score ≥ 4.0             Score < 4.0
+                               Score ≥ 4.0             Score < 4.0
                                     │                       │
                              ┌──────▼──────┐    ┌───────────▼──────────┐
                              │   Approved  │    │  Revision Required   │
@@ -99,7 +99,7 @@ The architecture features an automated quality-control loop, deterministic outpu
 
 ---
 
-## 👨‍💻 Agent Specifications
+## Agent Specifications
 
 Each agent in the system is configured with a specific role, instruction set, and sampling temperature to optimize for either determinism or creativity.
 
@@ -125,7 +125,7 @@ The Judge agent enforces a strict evaluation matrix before output delivery:
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **OpenAI Agents SDK (`v0.17.7`)**: Core orchestration framework for agent lifecycle management.
 - **Groq API**: High-speed LLaMA inference engine powering the LLM backend.
@@ -135,7 +135,7 @@ The Judge agent enforces a strict evaluation matrix before output delivery:
 
 ---
 
-## 💻 Interface Options
+## Interface Options
 
 ### Streamlit Web Interface
 
@@ -155,7 +155,7 @@ python main.py "Advances in Quantum Error Correction"
 
 ---
 
-## 🚀 Setup and Installation
+## Setup and Installation
 
 ### Prerequisites
 - Python 3.10+
@@ -196,7 +196,7 @@ OPENAI_AGENTS_DISABLE_TRACING=1
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 <details>
 <summary>Click to expand project structure</summary>
@@ -219,7 +219,7 @@ multi-agent_research_pipeline/
 
 ---
 
-## 🗺️ Roadmap and Future Enhancements
+## Roadmap and Future Enhancements
 
 - [ ] **Pluggable Search Interfaces**: Abstract the search layer to support Tavily, SerpAPI, and internal vector databases.
 - [ ] **Multi-Provider LLM Support**: Expand compatibility beyond Groq to support OpenAI, Anthropic, and localized models.
@@ -228,7 +228,7 @@ multi-agent_research_pipeline/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are always welcome! If you'd like to improve this project, please follow these steps:
 
@@ -242,6 +242,7 @@ Please ensure your code adheres to the existing style and includes appropriate d
 
 ---
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
